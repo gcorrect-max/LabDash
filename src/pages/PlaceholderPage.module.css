@@ -1,0 +1,31 @@
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.header {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.icon {
+  color: var(--color-primary);
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  color: var(--color-text);
+}
+
+.content {
+  padding: 48px 24px;
+  text-align: center;
+}
+
+.placeholder {
+  color: var(--color-text-secondary);
+  font-size: 16px;
+}

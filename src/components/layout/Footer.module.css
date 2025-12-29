@@ -1,0 +1,43 @@
+.footer {
+  position: fixed;
+  bottom: 0;
+  left: var(--sidebar-width);
+  right: 0;
+  height: var(--footer-height);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 24px;
+  background: var(--color-bg-secondary);
+  border-top: 1px solid var(--color-border);
+  font-size: 12px;
+  color: var(--color-text-secondary);
+  z-index: 80;
+}
+
+.left {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.fallbackIndicator {
+  color: var(--color-warning);
+}
+
+.right {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.configVersion {
+  opacity: 0.7;
+}
+
+@media (max-width: 768px) {
+  .footer {
+    left: 0;
+    padding: 0 16px;
+  }
+}

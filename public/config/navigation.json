@@ -1,0 +1,167 @@
+{
+  "version": "1.0.0",
+  "generatedAt": "2025-12-29T12:00:00.000Z",
+  "minAppVersion": "1.0.0",
+  "defaultRouteByRole": {
+    "admin": "/dashboard",
+    "teacher": "/dashboard",
+    "student": "/booking",
+    "ziggy": "/dashboard"
+  },
+  "featureFlags": {
+    "bookingEnabled": true,
+    "reportsEnabled": true,
+    "systemEnabled": true,
+    "serviceToolsEnabled": true
+  },
+  "items": [
+    {
+      "type": "link",
+      "id": "dashboard",
+      "label": "Dashboard",
+      "path": "/dashboard",
+      "icon": "LayoutDashboard",
+      "order": 1
+    },
+    {
+      "type": "group",
+      "id": "booking-group",
+      "label": "Rezerwacje",
+      "icon": "Calendar",
+      "order": 2,
+      "featureFlag": "bookingEnabled",
+      "children": [
+        {
+          "type": "link",
+          "id": "booking-calendar",
+          "label": "Kalendarz",
+          "path": "/booking",
+          "icon": "CalendarDays",
+          "order": 1,
+          "rolesAllowed": ["admin", "teacher", "student", "ziggy"]
+        },
+        {
+          "type": "link",
+          "id": "booking-admin",
+          "label": "Zarządzanie",
+          "path": "/booking/admin",
+          "icon": "Settings",
+          "order": 2,
+          "rolesAllowed": ["admin", "teacher", "ziggy"],
+          "permissionsRequired": ["BOOKING_EDIT"]
+        }
+      ]
+    },
+    {
+      "type": "divider",
+      "id": "divider-1",
+      "order": 3
+    },
+    {
+      "type": "group",
+      "id": "reports-group",
+      "label": "Raporty",
+      "icon": "BarChart3",
+      "order": 4,
+      "featureFlag": "reportsEnabled",
+      "rolesAllowed": ["admin", "teacher", "ziggy"],
+      "children": [
+        {
+          "type": "link",
+          "id": "reports-view",
+          "label": "Przeglądaj",
+          "path": "/reports",
+          "icon": "BarChart3",
+          "order": 1,
+          "permissionsRequired": ["REPORTS_VIEW"]
+        },
+        {
+          "type": "link",
+          "id": "reports-export",
+          "label": "Eksport",
+          "path": "/reports/export",
+          "icon": "Download",
+          "order": 2,
+          "rolesAllowed": ["admin", "ziggy"],
+          "permissionsRequired": ["REPORTS_VIEW"]
+        }
+      ]
+    },
+    {
+      "type": "group",
+      "id": "system-group",
+      "label": "System",
+      "icon": "Server",
+      "order": 5,
+      "featureFlag": "systemEnabled",
+      "rolesAllowed": ["admin", "ziggy"],
+      "children": [
+        {
+          "type": "link",
+          "id": "system-status",
+          "label": "Status",
+          "path": "/system/status",
+          "icon": "Activity",
+          "order": 1,
+          "permissionsRequired": ["SYSTEM_VIEW"]
+        },
+        {
+          "type": "link",
+          "id": "system-logs",
+          "label": "Logi",
+          "path": "/system/logs",
+          "icon": "FileText",
+          "order": 2,
+          "permissionsRequired": ["SYSTEM_VIEW"]
+        },
+        {
+          "type": "link",
+          "id": "system-users",
+          "label": "Użytkownicy",
+          "path": "/system/users",
+          "icon": "Users",
+          "order": 3,
+          "permissionsRequired": ["USERS_MANAGE"]
+        }
+      ]
+    },
+    {
+      "type": "divider",
+      "id": "divider-2",
+      "order": 6,
+      "rolesAllowed": ["admin", "ziggy"]
+    },
+    {
+      "type": "group",
+      "id": "service-group",
+      "label": "Serwis",
+      "icon": "Tool",
+      "order": 7,
+      "featureFlag": "serviceToolsEnabled",
+      "rolesAllowed": ["ziggy"],
+      "children": [
+        {
+          "type": "link",
+          "id": "service-tools",
+          "label": "Narzędzia",
+          "path": "/service/tools",
+          "icon": "Tool",
+          "order": 1,
+          "badge": {
+            "text": "DEV",
+            "variant": "warning"
+          }
+        }
+      ]
+    },
+    {
+      "type": "link",
+      "id": "health",
+      "label": "Health Check",
+      "path": "/health",
+      "icon": "HeartPulse",
+      "order": 100,
+      "rolesAllowed": ["admin", "ziggy"]
+    }
+  ]
+}
