@@ -10,6 +10,7 @@ import {
   BookingAdminPage,
   ReportsPage,
   ReportsExportPage,
+  ResultsPage,
   SystemStatusPage,
   SystemLogsPage,
   SystemUsersPage,
@@ -117,6 +118,16 @@ function AppRoutes() {
               permissions={['REPORTS_VIEW']}
             >
               <ReportsExportPage />
+            </RoleProtectedRoute>
+          }
+        />
+
+        {/* Results - przykładowa strona z tabelą */}
+        <Route
+          path={ROUTES.RESULTS}
+          element={
+            <RoleProtectedRoute roles={['admin', 'teacher', 'ziggy']}>
+              <ResultsPage />
             </RoleProtectedRoute>
           }
         />

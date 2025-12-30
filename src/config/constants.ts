@@ -18,6 +18,7 @@ export const ROUTES = {
   BOOKING_ADMIN: '/booking/admin',
   REPORTS: '/reports',
   REPORTS_EXPORT: '/reports/export',
+  RESULTS: '/results',
   SYSTEM_STATUS: '/system/status',
   SYSTEM_LOGS: '/system/logs',
   SYSTEM_USERS: '/system/users',

@@ -9,8 +9,9 @@
 5. [Użytkowanie](#użytkowanie)
 6. [Role i uprawnienia](#role-i-uprawnienia)
 7. [Konfiguracja nawigacji](#konfiguracja-nawigacji)
-8. [Testowanie](#testowanie)
-9. [Rozwiązywanie problemów](#rozwiązywanie-problemów)
+8. [Dodawanie własnej strony](#dodawanie-własnej-strony)
+9. [Testowanie](#testowanie)
+10. [Rozwiązywanie problemów](#rozwiązywanie-problemów)
 
 ---
 
@@ -445,6 +446,338 @@ Wskaźniki trybu awaryjnego:
 - Banner ostrzeżenia w nagłówku: **"Menu awaryjne aktywne"**
 - Informacja na stronie `/health`
 - Wpis w stopce: **(menu awaryjne)**
+
+---
+
+## Dodawanie własnej strony
+
+Ta sekcja opisuje krok po kroku, jak dodać nową stronę do aplikacji. Jako przykład użyjemy strony **Wyniki** (`/results`), która pobiera dane JSON z zewnętrznego URL i wyświetla je w tabeli z możliwością przeglądania szczegółów.
+
+### Krok 1: Utworzenie komponentu strony
+
+Utwórz nowy plik w katalogu `src/pages/`:
+
+**Plik:** `src/pages/MojaStronaPage.tsx`
+
+```tsx
+import { useState, useEffect } from 'react'
+import { List, Eye, X, Loader2, AlertCircle, RefreshCw } from 'lucide-react'
+import styles from './MojaStronaPage.module.css'
+
+// 1. Zdefiniuj typ danych
+interface MojeDane {
+  id: number
+  nazwa: string
+  status: string
+  // ... inne pola
+}
+
+export function MojaStronaPage() {
+  // 2. Stan komponentu
+  const [dane, setDane] = useState<MojeDane[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [wybranyElement, setWybranyElement] = useState<MojeDane | null>(null)
+
+  // 3. URL do pobrania danych
+  const DATA_URL = '/api/moje-dane.json'
+
+  // 4. Funkcja pobierająca dane
+  const pobierzDane = async () => {
+    setLoading(true)
+    setError(null)
+
+    try {
+      const response = await fetch(DATA_URL)
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}`)
+      }
+      const data = await response.json()
+      setDane(data)
+    } catch (err) {
+      setError('Nie udało się pobrać danych')
+      console.error(err)
+    } finally {
+      setLoading(false)
+    }
+  }
+
+  // 5. Pobierz dane przy montowaniu
+  useEffect(() => {
+    pobierzDane()
+  }, [])
+
+  // 6. Renderowanie
+  return (
+    <div className={styles.container}>
+      <h1>Moja Strona</h1>
+
+      {/* Tabela z danymi */}
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nazwa</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          {dane.map((element) => (
+            <tr
+              key={element.id}
+              onClick={() => setWybranyElement(element)}
+              style={{ cursor: 'pointer' }}
+            >
+              <td>{element.id}</td>
+              <td>{element.nazwa}</td>
+              <td>{element.status}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+
+      {/* Panel szczegółów */}
+      {wybranyElement && (
+        <div className={styles.detailsPanel}>
+          <h3>Szczegóły: {wybranyElement.nazwa}</h3>
+          <p>ID: {wybranyElement.id}</p>
+          <p>Status: {wybranyElement.status}</p>
+          <button onClick={() => setWybranyElement(null)}>Zamknij</button>
+        </div>
+      )}
+    </div>
+  )
+}
+```
+
+### Krok 2: Utworzenie stylów CSS
+
+Utwórz plik stylów CSS Module:
+
+**Plik:** `src/pages/MojaStronaPage.module.css`
+
+```css
+.container {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.detailsPanel {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+  z-index: 1000;
+}
+```
+
+### Krok 3: Eksportowanie strony
+
+Dodaj eksport do pliku `src/pages/index.ts`:
+
+```typescript
+// ... istniejące eksporty
+export { MojaStronaPage } from './MojaStronaPage'
+```
+
+### Krok 4: Dodanie stałej trasy
+
+Dodaj stałą trasy w `src/config/constants.ts`:
+
+```typescript
+export const ROUTES = {
+  // ... istniejące trasy
+  MOJA_STRONA: '/moja-strona',
+} as const
+```
+
+### Krok 5: Zarejestrowanie trasy w routerze
+
+Dodaj trasę w pliku `src/App.tsx`:
+
+```tsx
+import { MojaStronaPage } from '@/pages'
+
+// W komponencie AppRoutes, wewnątrz Routes:
+<Route
+  path={ROUTES.MOJA_STRONA}
+  element={
+    <RoleProtectedRoute roles={['admin', 'teacher']}>
+      <MojaStronaPage />
+    </RoleProtectedRoute>
+  }
+/>
+```
+
+### Krok 6: Dodanie do nawigacji
+
+Dodaj wpis w pliku `public/config/navigation.json`:
+
+```json
+{
+  "type": "link",
+  "id": "moja-strona",
+  "label": "Moja Strona",
+  "path": "/moja-strona",
+  "icon": "List",
+  "order": 10,
+  "rolesAllowed": ["admin", "teacher"]
+}
+```
+
+### Krok 7: (Opcjonalnie) Dodanie nowej ikony
+
+Jeśli potrzebujesz nowej ikony, dodaj ją w `src/components/ui/Icon.tsx`:
+
+```tsx
+import { NowaIkona } from 'lucide-react'
+
+const iconMap: Record<string, LucideIcon> = {
+  // ... istniejące ikony
+  NowaIkona,
+}
+```
+
+---
+
+### Przykład praktyczny: Strona Wyniki
+
+W aplikacji znajduje się gotowy przykład strony **Wyniki** (`/results`), która demonstruje:
+
+1. **Pobieranie danych JSON** z zewnętrznego URL
+2. **Wyświetlanie tabeli** z wynikami
+3. **Kliknięcie na wiersz** otwiera panel szczegółów
+4. **Obsługę błędów** z danymi demonstracyjnymi jako fallback
+5. **Responsywny design**
+
+#### Struktura danych
+
+```typescript
+interface Result {
+  id: number
+  name: string
+  email: string
+  status: 'active' | 'inactive' | 'pending'
+  score: number
+  date: string
+  details: {
+    department: string
+    position: string
+    notes: string
+    createdAt: string
+    updatedAt: string
+  }
+}
+```
+
+#### Konfiguracja URL źródła danych
+
+W pliku `src/pages/ResultsPage.tsx` zmień URL:
+
+```typescript
+// Zmień na swój endpoint API
+const DATA_URL = '/api/results.json'
+
+// Lub użyj zewnętrznego API
+const DATA_URL = 'https://api.example.com/results'
+```
+
+#### Przykładowy format JSON
+
+Utwórz plik `public/api/results.json`:
+
+```json
+[
+  {
+    "id": 1,
+    "name": "Jan Kowalski",
+    "email": "jan.kowalski@example.com",
+    "status": "active",
+    "score": 95,
+    "date": "2025-12-28",
+    "details": {
+      "department": "IT",
+      "position": "Senior Developer",
+      "notes": "Bardzo dobry wynik",
+      "createdAt": "2025-01-15T10:30:00Z",
+      "updatedAt": "2025-12-28T14:22:00Z"
+    }
+  },
+  {
+    "id": 2,
+    "name": "Anna Nowak",
+    "email": "anna.nowak@example.com",
+    "status": "pending",
+    "score": 72,
+    "date": "2025-12-27",
+    "details": {
+      "department": "Marketing",
+      "position": "Marketing Manager",
+      "notes": "",
+      "createdAt": "2025-02-20T09:15:00Z",
+      "updatedAt": "2025-12-27T11:45:00Z"
+    }
+  }
+]
+```
+
+#### Funkcjonalności strony Wyniki
+
+| Funkcja | Opis |
+|---------|------|
+| **Tabela danych** | Wyświetla listę wyników z kolumnami: ID, Imię, Email, Status, Wynik, Data |
+| **Sortowanie** | Dane sortowane według daty |
+| **Kliknięcie wiersza** | Otwiera modal ze szczegółami |
+| **Panel szczegółów** | Pokazuje wszystkie dane rekordu |
+| **Przycisk Odśwież** | Ponownie pobiera dane z API |
+| **Obsługa błędów** | W przypadku błędu pokazuje dane demonstracyjne |
+| **Statusy kolorowe** | Aktywny (zielony), Oczekujący (pomarańczowy), Nieaktywny (czerwony) |
+
+#### Dostęp do strony
+
+Strona **Wyniki** jest dostępna dla ról:
+- `admin`
+- `teacher`
+- `ziggy`
+
+Studenci nie mają dostępu do tej strony.
+
+---
+
+### Schemat dodawania nowej strony
+
+```
+┌─────────────────────────────────────────────────────────────┐
+│                    DODAWANIE NOWEJ STRONY                    │
+├─────────────────────────────────────────────────────────────┤
+│                                                              │
+│  1. src/pages/NowaStrona.tsx         ← Komponent strony     │
+│  2. src/pages/NowaStrona.module.css  ← Style CSS            │
+│  3. src/pages/index.ts               ← Eksport              │
+│  4. src/config/constants.ts          ← Stała ROUTES         │
+│  5. src/App.tsx                      ← Trasa w routerze     │
+│  6. public/config/navigation.json    ← Pozycja w menu       │
+│  7. src/components/ui/Icon.tsx       ← (opcjonalnie) ikona  │
+│                                                              │
+└─────────────────────────────────────────────────────────────┘
+```
+
+### Checklist przed wdrożeniem
+
+- [ ] Komponent strony utworzony i eksportowany
+- [ ] Style CSS dodane
+- [ ] Stała trasy dodana w `constants.ts`
+- [ ] Trasa zarejestrowana w `App.tsx`
+- [ ] Odpowiednie role/uprawnienia ustawione
+- [ ] Pozycja menu dodana w `navigation.json`
+- [ ] Ikona dodana (jeśli nowa)
+- [ ] Przetestowano dostęp dla różnych ról
+- [ ] Sprawdzono responsywność na mobile
 
 ---
 

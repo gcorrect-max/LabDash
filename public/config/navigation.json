@@ -88,6 +88,19 @@
       ]
     },
     {
+      "type": "link",
+      "id": "results",
+      "label": "Wyniki",
+      "path": "/results",
+      "icon": "List",
+      "order": 5,
+      "rolesAllowed": ["admin", "teacher", "ziggy"],
+      "badge": {
+        "text": "Przykład",
+        "variant": "info"
+      }
+    },
+    {
       "type": "group",
       "id": "system-group",
       "label": "System",
