@@ -23,6 +23,7 @@ export const ROUTES = {
   SYSTEM_LOGS: '/system/logs',
   SYSTEM_USERS: '/system/users',
   SERVICE_TOOLS: '/service/tools',
+  NAVIGATION_EDITOR: '/service/navigation-editor',
   FORBIDDEN: '/403',
   NOT_FOUND: '/404',
   HEALTH: '/health',

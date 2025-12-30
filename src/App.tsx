@@ -15,6 +15,7 @@ import {
   SystemLogsPage,
   SystemUsersPage,
   ServiceToolsPage,
+  NavigationEditorPage,
   ForbiddenPage,
   NotFoundPage,
   HealthPage,
@@ -173,6 +174,14 @@ function AppRoutes() {
           element={
             <RoleProtectedRoute roles={['ziggy']}>
               <ServiceToolsPage />
+            </RoleProtectedRoute>
+          }
+        />
+        <Route
+          path={ROUTES.NAVIGATION_EDITOR}
+          element={
+            <RoleProtectedRoute roles={['ziggy']}>
+              <NavigationEditorPage />
             </RoleProtectedRoute>
           }
         />

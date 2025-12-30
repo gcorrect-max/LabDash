@@ -164,6 +164,14 @@
             "text": "DEV",
             "variant": "warning"
           }
+        },
+        {
+          "type": "link",
+          "id": "navigation-editor",
+          "label": "Edytor nawigacji",
+          "path": "/service/navigation-editor",
+          "icon": "Settings",
+          "order": 2
         }
       ]
     },
