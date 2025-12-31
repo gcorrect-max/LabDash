@@ -38,7 +38,8 @@
           "path": "/booking",
           "icon": "CalendarDays",
           "order": 1,
-          "rolesAllowed": ["admin", "teacher", "student", "ziggy"]
+          "rolesAllowed": ["admin", "teacher", "student", "ziggy"],
+          "badge": { "text": "NOWE", "variant": "info" }
         },
         {
           "type": "link",
