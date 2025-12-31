@@ -1,0 +1,42 @@
+.container {
+  padding: 16px;
+  font-family: var(--font-sans, Inter, system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial);
+}
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+.leftControls, .rightControls { display:flex; gap:8px; align-items:center }
+.centerTitle { flex:1; text-align:center }
+.ctrl { padding:6px 8px; border:1px solid #ddd; background:#fff; cursor:pointer }
+.addBtn { background:#0b5fff; color:white; border:none; padding:6px 10px; border-radius:4px; cursor:pointer }
+.calendarGrid { border:1px solid #e6e6e6; border-radius:6px; overflow:hidden }
+.weekDays { display:grid; grid-template-columns:repeat(7,1fr); background:#f7f7f7; padding:8px 4px }
+.weekDay { text-align:center; font-weight:600; }
+.daysGrid { display:grid; grid-template-columns:repeat(7,1fr); gap:1px; background:#e6e6e6 }
+.dayCell { background:white; min-height:100px; padding:6px; display:flex; flex-direction:column }
+.outside { background:#fafafa; color:#aaa }
+.dayHeader { display:flex; justify-content:flex-end; font-size:12px; cursor:pointer }
+.eventsList { margin-top:6px; display:flex; flex-direction:column; gap:6px }
+.eventItem { background:#e8f0ff; padding:6px; border-radius:4px; cursor:pointer; display:flex; justify-content:space-between; align-items:center }
+.eventTime { font-size:11px; color:#333; margin-left:8px }
+.loading { padding:12px; color:#666 }
+.error { padding:12px; color:#8b0000 }
+.listView { display:flex; flex-direction:column; gap:8px }
+.listItem { padding:8px; border:1px solid #eee; border-radius:6px; display:flex; gap:12px; cursor:pointer }
+.listTime { color:#666; min-width:200px }
+.modalBackdrop { position:fixed; inset:0; background:rgba(0,0,0,0.4); display:flex; align-items:center; justify-content:center }
+.modal { background:white; padding:16px; border-radius:8px; width:480px; max-width:95% }
+.modal label { display:block; margin-bottom:8px }
+.modal input, .modal textarea, .modal select { width:100%; padding:8px; border:1px solid #ddd; border-radius:4px }
+.modalActions { display:flex; gap:8px; justify-content:flex-end; margin-top:12px }
+.saveBtn { background:#0b5fff; color:white; border:none; padding:8px 12px; border-radius:4px }
+.deleteBtn { background:#ff4d4f; color:white; border:none; padding:8px 12px; border-radius:4px }
+
+@media (max-width: 700px) {
+  .weekDays { display:none }
+  .daysGrid { grid-template-columns:repeat(2,1fr) }
+}

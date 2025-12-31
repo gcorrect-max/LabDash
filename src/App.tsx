@@ -7,6 +7,7 @@ import {
   LoginPage,
   DashboardPage,
   BookingPage,
+  BookingCalendarPage,
   BookingAdminPage,
   ReportsPage,
   ReportsExportPage,
@@ -83,7 +84,7 @@ function AppRoutes() {
           path={ROUTES.BOOKING}
           element={
             <RoleProtectedRoute roles={['admin', 'teacher', 'student', 'ziggy']}>
-              <BookingPage />
+              <BookingCalendarPage />
             </RoleProtectedRoute>
           }
         />
